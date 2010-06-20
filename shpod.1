@@ -1,0 +1,48 @@
+.Dd $Mdocdate: June 20 2010 $
+.Dt SHPOD 1
+.Os
+.
+.Sh NAME
+.Nm shpod
+.Nd podcast client based on mashpodder.sh
+.
+.Sh SYNOPSIS
+.Nm shpod
+.Op Fl c Ar filename
+.Op Fl d Ar date
+.Op Fl f
+.Op Fl h
+.
+.Sh DESCRIPTION
+\"# SP.CONF
+\"
+\"Three fields, separated by spaces:
+\"Field 1: rss feed
+\"Field 2: name_of_directory or 'date'
+\"Field 3: 'all' or 'none' or 'update' or a number greater than 0
+\"
+\"Field 1 is self explanatory.  Field 2 is where the episodes will be saved,
+\"either in a user-named directory or a date-based directory.  Put the word
+\"'date' if you want date-based directories.  Field 3 is how many episodes to
+\"fetch.  The term 'update' means episode names will be saved as if they were
+\"downloaded but nothing will actually be downloaded.
+\"
+\"# SHPOD
+\"
+\"`basename $0` $VERSION
+\"
+\"usage: $0 [options] <arguments>
+\"
+\"[-c] <filename>  Use a different config file other than mp.conf.
+\"[-d] <date>      Valid date string for date-based archiving.
+\"[-f]             Override mp.conf and download the first newest episode.
+\"[-h]             Display this help message.
+\"[-u]             Override mp.conf and only update (mark downloaded).
+\"
+\"sp.conf is the standard configuration file. Please see the sample
+\"sp.conf for
+\"clues on how this file is to be configured.
+\"
+\"Some of the default settings can be set permanently at the top of the script
+\"in the 'USER CONFIGURATION' section or temporarily by passing a command
+\"line switch.

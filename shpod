@@ -1,0 +1,163 @@
+#!/bin/sh
+#
+# shpod
+
+BASEDIR=$HOME/git/shpod
+DATESTRING='%Y%m%d'
+RSSFILE=$BASEDIR/sp.conf
+PARSE_ENCLOSURE=$BASEDIR/enc.xsl
+WGET_QUIET='-q'
+WGET_TIMEOUT='30'
+
+VERSION=0.0
+CWD=$(pwd)
+INCOMING=$BASEDIR/incoming
+TEMPLOG=$BASEDIR/tmp.log
+PODLOG=$BASEDIR/podcast.log
+SUMMARYLOG=$BASEDIR/summary.log
+TEMPRSSFILE=$BASEDIR/mp.conf.tmp
+
+sanity_checks() {
+	local FEED ARCHIVETYPE DLNUM DATADIR
+	rm -f $TEMPRSSFILE
+	touch $TEMPRSSFILE
+	if [ ! -e "$RSSFILE" ]; then
+		echo "The file $RSSFILE does not exist in $BASEDIR. \
+			Run $0 -h for usage."
+		exit 0
+	fi
+	while read LINE; do
+		DLNUM="none"
+		FEED=$(echo $LINE | cut -f1 -d ' ')
+		ARCHIVETYPE=$(echo $LINE | cut -f2 -d ' ')
+		DLNUM=$(echo $LINE | cut -f3 -d ' ')
+		if echo $LINE | grep -E '^#|^$' > /dev/null; then
+			continue
+		fi
+		if [[ "$DLNUM" != "none" && "$DLNUM" != "all" && \
+			"$DLNUM" != "update" && $DLNUM -lt 1 ]]; then
+			echo "Please check $RSSFILE."
+			exit 0
+		fi
+		if [ "$DLNUM" = "update" ]; then
+			DATADIR=$ARCHIVETYPE
+		else
+			if [ ! "$ARCHIVETYPE" = "date" ]; then
+				DATADIR=$ARCHIVETYPE
+			elif [ "$ARCHIVETYPE" = "date" ]; then
+				DATADIR=$(date +$DATESTRING)
+			else
+				echo "Please check $RSSFILE."
+				exit 0
+			fi
+		fi
+		echo "$FEED $DATADIR $DLNUM" >> $TEMPRSSFILE
+	done < $RSSFILE
+}
+
+initial_setup() {
+	if [ ! -e $INCOMING ]; then
+		mkdir -p $INCOMING
+	fi
+	rm -f $TEMPLOG
+	touch $TEMPLOG
+	if [ ! -e $PODLOG ]; then
+		touch $PODLOG
+	fi
+}
+
+fix_url() {
+	local FIXURL
+	FIXURL=$1
+	FIRSTFILENAME=$(echo $FIXURL | awk -F / '{print $NF}')
+	FILENAME=$(echo $FIRSTFILENAME | awk -F ? '{print $1}')
+	FILENAME=$(echo $FILENAME | tr -d "()")
+	# Replace URL hex sequences in filename
+	#  (like %20 for ' ' and %2B for '+').
+	FILENAME=$(echo "echo $FILENAME" \
+		| sed "s/%\(..\)/\$(printf \"\\\\x\\1\")/g" | sh)
+	FILENAME=$(echo $FILENAME | sed -e 's/ /_/g')
+	# Remove question marks at end.
+	FILENAME=$(echo $FILENAME | sed -e 's/?.*$//')
+}
+
+check_directory() {
+	if [ ! -e $DATADIR ]; then
+		mkdir -p $DATADIR
+	fi
+	return 0
+}
+
+fetch_podcasts() {
+	local LINE FEED DATADIR DLNUM COUNTER FILE URL FILENAME DLURL
+	while read LINE; do
+		FEED=$(echo $LINE | cut -f1 -d ' ')
+		DATADIR=$(echo $LINE | cut -f2 -d ' ')
+		DLNUM=$(echo $LINE | cut -f3 -d ' ')
+		COUNTER=0
+		FILE=$(wget -q $FEED -O - | \
+			xsltproc $PARSE_ENCLOSURE - 2> /dev/null) || \
+			FILE=$(wget -q $FEED -O - | tr '\r' '\n' | tr \' \" | \
+			sed -n 's/.*url="\([^"]*\)".*/\1/p')
+		for URL in $FILE; do
+			FILENAME=''
+			if [ "$DLNUM" = "$COUNTER" ]; then
+				break
+			fi
+			DLURL=$(curl -s -I -L -w %{url_effective} --url $URL | tail -n 1)
+			fix_url $DLURL
+			echo $FILENAME >> $TEMPLOG
+			if ! grep -x "^$FILENAME" $PODLOG > /dev/null; then
+				if [ "$DLNUM" = "update" ]; then
+					continue
+				fi
+				check_directory $DATADIR
+				if [ ! -e $DATADIR/"$FILENAME" ]; then
+					cd $INCOMING
+					wget $WGET_QUIET -c -T $WGET_TIMEOUT -O "$FILENAME" "$DLURL"
+					mv "$FILENAME" $BASEDIR/$DATADIR/"$FILENAME"
+					cd $BASEDIR
+				fi
+			fi
+			((COUNTER=COUNTER+1))
+		done
+	done < $TEMPRSSFILE
+}
+
+final_cleanup() {
+	cat $PODLOG >> $TEMPLOG
+	sort $TEMPLOG | uniq > $PODLOG
+	rm -f $TEMPLOG
+	rm -f $TEMPRSSFILE
+}
+
+# main
+while getopts ":c:d:f" OPT; do
+	case $OPT in
+	c)
+		RSSFILE="$OPTARG"
+		;;
+	d)
+		DATESTRING="$OPTARG"
+		;;
+	f)
+		FIRST_ONLY=1
+		;;
+	*)
+		cat << END
+`basename $0` $VERSION
+usage: $0 [-c filename] [-d date] [-fh]
+END
+		exit 0
+		;;
+	esac
+done
+shift $(($OPTIND - 1))
+
+cd $BASEDIR
+sanity_checks
+initial_setup
+fetch_podcasts
+final_cleanup
+cd $CWD
+exit 0
