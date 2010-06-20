@@ -9,6 +9,7 @@ PARSE_ENCLOSURE=$BASEDIR/enc.xsl
 WGET_QUIET='-q'
 WGET_TIMEOUT='30'
 
+PRGNAM=`basename $0`
 VERSION=0.0
 CWD=$(pwd)
 INCOMING=$BASEDIR/incoming
@@ -145,8 +146,8 @@ while getopts ":c:d:f" OPT; do
 		;;
 	*)
 		cat << END
-`basename $0` $VERSION
-usage: $0 [-c filename] [-d date] [-fh]
+$PRGNAM $VERSION
+usage: $PRGNAM [-c filename] [-d date] [-fh]
 END
 		exit 0
 		;;
