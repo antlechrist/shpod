@@ -3,5 +3,9 @@ SHPOD
 
 Description
 -----------
-Podcast client based on mashpodder.sh by Chess Griffin, based on bashpodder
-by Linc Fessenden. Aims to remove all bashisms, portabilitification ensues.
+Podcast client based on the excellent mashpodder.sh by Chess Griffin, which
+is in turn based on bashpodder by Linc Fessenden. Aims to remove all bashisms,
+portabilitification ensues.
+
+* mashpodder.sh: <http://code.google.com/p/mashpodder/>
+* bashpodder:    <http://lincgeek.org/bashpodder/>
