@@ -14,35 +14,60 @@
 .Op Fl h
 .
 .Sh DESCRIPTION
-\"# SP.CONF
-\"
-\"Three fields, separated by spaces:
-\"Field 1: rss feed
-\"Field 2: name_of_directory or 'date'
-\"Field 3: 'all' or 'none' or 'update' or a number greater than 0
-\"
-\"Field 1 is self explanatory.  Field 2 is where the episodes will be saved,
-\"either in a user-named directory or a date-based directory.  Put the word
-\"'date' if you want date-based directories.  Field 3 is how many episodes to
-\"fetch.  The term 'update' means episode names will be saved as if they were
-\"downloaded but nothing will actually be downloaded.
-\"
-\"# SHPOD
-\"
-\"`basename $0` $VERSION
-\"
-\"usage: $0 [options] <arguments>
-\"
-\"[-c] <filename>  Use a different config file other than mp.conf.
-\"[-d] <date>      Valid date string for date-based archiving.
-\"[-f]             Override mp.conf and download the first newest episode.
-\"[-h]             Display this help message.
-\"[-u]             Override mp.conf and only update (mark downloaded).
-\"
-\"sp.conf is the standard configuration file. Please see the sample
-\"sp.conf for
-\"clues on how this file is to be configured.
-\"
-\"Some of the default settings can be set permanently at the top of the script
-\"in the 'USER CONFIGURATION' section or temporarily by passing a command
-\"line switch.
+.Nm shpod
+yoinks podcasts from the Interwobs.
+.Bl -tag -width Ds
+.It Fl c Ar filename
+Use a configuration file other than
+.Pa ~/.shrc .
+.It Fl d Ar date
+Valid date string for date-based archiving.
+.It Fl f
+Override
+.Pa ~/.sprc
+and download the first newest episode.
+.It Fl h
+Display this help message.
+.El
+.Pp
+Some of the default settings can be set permanently
+at the top of the script or temporarily by passing a
+command line switch. Should be factored out.
+.
+.Sh FILES
+.Bl -tag -width Ds
+.It Pa ~/.sprc
+.El
+Three fields, separated by spaces:
+.Pp
+Field 1: rss feed
+.br
+Field 2: name_of_directory or `date'
+.br
+Field 3: `all' or `none' or `update'
+or a number greater than 0.
+.Pp
+Field 1 is self explanatory.
+Field 2 is where the episodes will be saved,
+either in a user-named directory or a date-based directory.
+Put the word `date' if you want date-based directories.
+Field 3 is how many episodes to fetch.
+The term `update' means episode names will be saved as if
+they were downloaded but nothing will actually be downloaded.
+.Pp
+.Pa ~/.sprc
+is the standard configuration file.
+Please see the sample sprc.def for
+clues on how this file is to be configured.
+.
+.Sh SEE ALSO
+.Pp
+.Lk http://github.com/antlechrist/shpod
+.Pp
+.Lk http://code.google.com/p/mashpodder/
+.Pp
+Many thanks to Chess Griffin and Linc Fessenden.
+.
+.Sh AUTHOR
+.An Andrew Antle
+.Aq andrew at antlechrist dot org
