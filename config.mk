@@ -1,4 +1,4 @@
-# gee version
+# shpod version
 VERSION = 0.1
 
 # Customize below to fit your system
