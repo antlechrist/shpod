@@ -1,21 +1,21 @@
 #!/bin/sh
 
-BASEDIR=$HOME/git/shpod
+BASEDIR=/mnt/sdb4/podcasts
 DATESTRING='%Y%m%d'
 PARSE_ENCLOSURE=$BASEDIR/enc.xsl
-RSSFILE=$BASEDIR/sp.conf
+RSSFILE=~/.sprc
 WGET_QUIET='-q'
 WGET_TIMEOUT='30'
 
 CWD=$(pwd)
-PRGNAM=`basename $0`
+PRGNAM=$(basename $0)
 VERSION=0.0
 
 INCOMING=$BASEDIR/incoming
 PODLOG=$BASEDIR/podcast.log
 SUMMARYLOG=$BASEDIR/summary.log
 TEMPLOG=$BASEDIR/tmp.log
-TEMPRSSFILE=$BASEDIR/sp.conf.tmp
+TEMPRSSFILE=$BASEDIR/sprc.tmp
 
 check_directory() {
 	if [ ! -e $DATADIR ]; then
@@ -50,6 +50,7 @@ fetch_podcasts() {
 				check_directory $DATADIR
 				if [ ! -e $DATADIR/"$FILENAME" ]; then
 					cd $INCOMING
+					echo "retreiving $FILENAME"
 					wget $WGET_QUIET -c -T $WGET_TIMEOUT -O "$FILENAME" "$DLURL"
 					mv "$FILENAME" $BASEDIR/$DATADIR/"$FILENAME"
 					cd $BASEDIR
