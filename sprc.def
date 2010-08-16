@@ -5,7 +5,10 @@ http://feeds.feedburner.com/scottsigler scottsigler all
 http://feeds.feedburner.com/Bsdtalk bsdtalk all
 http://distrowatch.com/news/podcast.xml distrowatch all
 http://downloads.bbc.co.uk/podcasts/radio4/fricomedy/rss.xml bbc-fricomedy all
+http://downloads.bbc.co.uk/podcasts/scotland/scotintro/rss.xml scotintro all
+http://downloads.bbc.co.uk/podcasts/worldservice/newshour/rss.xml newshour all
 http://www.npr.org/rss/podcast.php?id=510208 car-talk all
+http://www.npr.org/rss/podcast.php?id=35 wait-wait all
 #http://feeds2.feedburner.com/linuxreality linuxreality all
 #http://www.podiobooks.com/title/bloodcast-1/feed bloodcast-1 all
 #http://www.podiobooks.com/title/bloodcast-2/feed bloodcast-2 all
@@ -24,3 +27,8 @@ http://www.npr.org/rss/podcast.php?id=510208 car-talk all
 #http://www.podiobooks.com/title/devlin-hell-hermit/feed devlin-hell-hermit all
 #http://www.podiobooks.com/title/hard-boiled-headline/feed hard-boiled-headline all
 #http://www.podiobooks.com/title/the-zombie-chronicles-escape/feed zombie-chronicles-escape all
+#http://webcast.berkeley.edu/media/common/rss/Computer_Science_61A__001_Spring_2010_Audio__webcast.rss berkeley/cs61a-sicp all
+http://webcast.berkeley.edu/media/common/rss/Letters_and_Science_C70V__001__Physics_C10__001_Spring_2010_Audio__webcast.rss berkeley/c10-physics all
+http://webcast.berkeley.edu/media/common/rss/Mathematics_1A__001_Fall_2009_Audio__webcast.rss berkeley/math1a-calculus all
+http://webcast.berkeley.edu/media/common/rss/Mathematics_1B__002_Spring_2010_Audio__webcast.rss berkeley/math1b-calculus all
+#http://webcast.berkeley.edu/media/common/rss/Philosophy_3__001_Spring_2010_Audio__webcast.rss berkeley/phil3-nature-mind all
